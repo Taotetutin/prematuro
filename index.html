@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="en" >
+<head>
+  <meta charset="UTF-8">
+  <title>CodePen - Parto Prematuro fin</title>
+  
+
+</head>
+<body>
+<!-- partial:index.partial.html -->
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Predicción de Parto Prematuro</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 1000px;
+        }
+        .container {
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            max-width: 500px;
+            width: 100%;
+            transform: rotateX(5deg) rotateY(-5deg);
+            transition: transform 0.3s ease;
+        }
+        .container:hover {
+            transform: rotateX(0deg) rotateY(0deg);
+        }
+        h1 {
+            color: #4a4a4a;
+            text-align: center;
+            margin-bottom: 30px;
+            font-size: 28px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            color: #555;
+            font-weight: bold;
+        }
+        input, select {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 8px;
+            box-sizing: border-box;
+            background-color: #f0f0f0;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        input:focus, select:focus {
+            outline: none;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1), 0 0 8px rgba(102,175,233,0.6);
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+        }
+        #results {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Predicción de Parto Prematuro</h1>
+        <div class="form-group">
+            <label for="gestationalWeeks">Edad gestacional (semanas):</label>
+            <input type="number" id="gestationalWeeks" required min="22" max="34">
+        </div>
+        <div class="form-group">
+            <label for="gestationalDays">Edad gestacional (días adicionales):</label>
+            <input type="number" id="gestationalDays" required min="0" max="6">
+        </div>
+        <div class="form-group">
+            <label for="uterineDynamics">¿Dinámica uterina?</label>
+            <select id="uterineDynamics" required>
+                <option value="no">No</option>
+                <option value="yes">Sí</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="priorPreterm">¿Antecedente de parto prematuro?</label>
+            <select id="priorPreterm" required>
+                <option value="no">No</option>
+                <option value="yes">Sí</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="cervicalLength">Longitud cervical (mm):</label>
+            <input type="number" id="cervicalLength" required min="0" max="50">
+        </div>
+        <div class="form-group">
+            <label for="membraneRupture">¿Rotura de membranas?</label>
+            <select id="membraneRupture" required>
+                <option value="no">No</option>
+                <option value="yes">Sí</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="fetalNumber">Número de fetos:</label>
+            <select id="fetalNumber" required>
+                <option value="1">1</option>
+                <option value="2">2</option>
+                <option value="3">3</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="cervicalSurgery">¿Cirugía cervical previa?</label>
+            <select id="cervicalSurgery" required>
+                <option value="no">No</option>
+                <option value="yes">Sí</option>
+            </select>
+        </div>
+        <button onclick="calculateRisk()">Calcular Riesgo</button>
+        <div id="results"></div>
+    </div>
+
+    <script>
+        function calculateRisk() {
+            const gestationalWeeks = parseFloat(document.getElementById('gestationalWeeks').value);
+            const gestationalDays = parseFloat(document.getElementById('gestationalDays').value);
+            const uterineDynamics = document.getElementById('uterineDynamics').value;
+            const priorPreterm = document.getElementById('priorPreterm').value;
+            const cervicalLength = parseFloat(document.getElementById('cervicalLength').value);
+            const membraneRupture = document.getElementById('membraneRupture').value;
+            const fetalNumber = parseInt(document.getElementById('fetalNumber').value);
+            const cervicalSurgery = document.getElementById('cervicalSurgery').value;
+
+            if (isNaN(gestationalWeeks) || isNaN(gestationalDays) || isNaN(cervicalLength)) {
+                alert("Por favor, complete todos los campos numéricos.");
+                return;
+            }
+
+            const gestAge = gestationalWeeks + gestationalDays / 7;
+            let riskFactor = 1;
+
+            if (gestAge < 24) riskFactor *= 1.5;
+            else if (gestAge < 28) riskFactor *= 1.3;
+            else if (gestAge < 32) riskFactor *= 1.2;
+
+            if (cervicalLength < 15) riskFactor *= 2;
+            else if (cervicalLength < 25) riskFactor *= 1.5;
+
+            if (uterineDynamics === 'yes') riskFactor *= 1.3;
+            if (priorPreterm === 'yes') riskFactor *= 1.5;
+            if (membraneRupture === 'yes') riskFactor *= 1.8;
+            if (fetalNumber > 1) riskFactor *= 1.5;
+            if (cervicalSurgery === 'yes') riskFactor *= 1.2;
+
+            const baseRisk = 0.01;
+            const riskOneWeek = Math.min(baseRisk * riskFactor * 2, 1) * 100;
+            const riskTwoWeeks = Math.min(baseRisk * riskFactor * 3, 1) * 100;
+            const riskFourWeeks = Math.min(baseRisk * riskFactor * 4, 1) * 100;
+
+            displayResults(riskOneWeek, riskTwoWeeks, riskFourWeeks, gestAge);
+        }
+
+        function displayResults(riskOneWeek, riskTwoWeeks, riskFourWeeks, gestAge) {
+            const resultsDiv = document.getElementById('results');
+            resultsDiv.style.display = 'block';
+            let html = `<h2>Resultados:</h2>
+                        <p>Riesgo de parto prematuro:</p>
+                        <ul>
+                            <li>A 1 semana: ${riskOneWeek.toFixed(1)}%</li>
+                            <li>A 2 semanas: ${riskTwoWeeks.toFixed(1)}%</li>
+                            <li>A 4 semanas: ${riskFourWeeks.toFixed(1)}%</li>
+                        </ul>
+                        <p>Interpretación:</p>`;
+
+            if (riskOneWeek >= 5) {
+                html += "<p>Riesgo elevado de parto prematuro inminente.</p>";
+                if (gestAge < 34) {
+                    html += "<p>Considerar la administración de corticosteroides antenatales.</p>";
+                }
+                if (gestAge < 30) {
+                    html += "<p>Evaluar la administración de sulfato de magnesio para neuroprotección fetal.</p>";
+                }
+            } else if (riskTwoWeeks >= 10 || riskFourWeeks >= 15) {
+                html += "<p>Riesgo moderado de parto prematuro. Considerar un seguimiento más frecuente.</p>";
+            } else {
+                html += "<p>Riesgo bajo de parto prematuro inmediato. Continuar con el control prenatal habitual.</p>";
+            }
+
+            html += "<p><em>Esta interpretación es una guía. La decisión final debe ser tomada por un profesional de la salud.</em></p>";
+
+            resultsDiv.innerHTML = html;
+        }
+    </script>
+</body>
+</html>
+<!-- partial -->
+  
+</body>
+</html>
