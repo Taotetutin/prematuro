@@ -2,7 +2,7 @@
 <html lang="en" >
 <head>
   <meta charset="UTF-8">
-  <title>CodePen - Parto Prematuro fin</title>
+  <title>CodePen - Pretermcalcfin</title>
   
 
 </head>
@@ -13,215 +13,596 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Predicción de Parto Prematuro</title>
+    <title>Calculadora de Riesgo de Parto Prematuro</title>
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600&display=swap');
+
+        :root {
+            --primary-color: #3a7bd5;
+            --secondary-color: #00d2ff;
+            --background-color: #e0e9f5;
+            --text-color: #2c3e50;
+            --card-background: #f0f7ff;
+            --input-background: #ffffff;
+            --button-gradient: linear-gradient(135deg, #3a7bd5, #00d2ff);
+            --shadow-color: rgba(58, 123, 213, 0.2);
+        }
+
         body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            font-family: 'Poppins', sans-serif;
+            line-height: 1.6;
             margin: 0;
             padding: 20px;
+            background-color: var(--background-color);
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.1'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+            color: var(--text-color);
             min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            perspective: 1000px;
         }
+
         .container {
-            background-color: rgba(255, 255, 255, 0.9);
-            border-radius: 20px;
-            padding: 30px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
-            max-width: 500px;
+            max-width: 800px;
             width: 100%;
-            transform: rotateX(5deg) rotateY(-5deg);
-            transition: transform 0.3s ease;
+            background: var(--card-background);
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 
+                0 10px 30px var(--shadow-color), 
+                0 1px 8px rgba(0,0,0,0.1),
+                inset 0 0 0 1px rgba(255,255,255,0.5);
+            transform: perspective(1000px) rotateX(2deg);
+            transition: all 0.3s ease;
+            background-image: 
+                linear-gradient(135deg, rgba(255,255,255,0.2) 0%, rgba(255,255,255,0) 100%),
+                url("data:image/svg+xml,%3Csvg width='6' height='6' viewBox='0 0 6 6' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='0.07' fill-rule='evenodd'%3E%3Cpath d='M5 0h1L0 6V5zM6 5v1H5z'/%3E%3C/g%3E%3C/svg%3E");
+            position: relative;
+            overflow: hidden;
         }
+
+        .container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255,255,255,0.3) 0%, rgba(255,255,255,0) 100%);
+            pointer-events: none;
+        }
+
         .container:hover {
-            transform: rotateX(0deg) rotateY(0deg);
+            transform: perspective(1000px) rotateX(0deg);
+            box-shadow: 
+                0 15px 35px var(--shadow-color), 
+                0 3px 10px rgba(0,0,0,0.1),
+                inset 0 0 0 1px rgba(255,255,255,0.6);
         }
+
+        h1, h2, h3 {
+            color: var(--primary-color);
+            margin-bottom: 20px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
         h1 {
-            color: #4a4a4a;
+            font-size: 2.5em;
             text-align: center;
             margin-bottom: 30px;
-            font-size: 28px;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            background: var(--button-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            position: relative;
         }
+
+        h1::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100px;
+            height: 3px;
+            background: var(--button-gradient);
+            border-radius: 3px;
+        }
+
         .form-group {
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            position: relative;
         }
+
+        .form-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .form-row .form-group {
+            flex: 1;
+            margin-right: 10px;
+        }
+
+        .form-row .form-group:last-child {
+            margin-right: 0;
+        }
+
         label {
             display: block;
             margin-bottom: 8px;
-            color: #555;
-            font-weight: bold;
+            font-weight: 600;
+            color: var(--text-color);
         }
-        input, select {
+
+        .custom-roller {
             width: 100%;
-            padding: 12px;
-            border: none;
+            height: 40px;
+            position: relative;
+            overflow: hidden;
+            border: 2px solid #e1e8f0;
             border-radius: 8px;
-            box-sizing: border-box;
-            background-color: #f0f0f0;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
+            background: var(--input-background);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
         }
-        input:focus, select:focus {
+
+        .custom-roller input {
+            width: 100%;
+            height: 100%;
+            font-size: 18px;
+            text-align: center;
+            border: none;
             outline: none;
-            box-shadow: inset 0 2px 4px rgba(0,0,0,0.1), 0 0 8px rgba(102,175,233,0.6);
+            background: transparent;
         }
-        button {
+
+        .custom-roller::before,
+        .custom-roller::after {
+            content: '';
+            position: absolute;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: linear-gradient(to bottom, rgba(255,255,255,0.9), rgba(255,255,255,0));
+            pointer-events: none;
+        }
+
+        .custom-roller::before {
+            top: 0;
+        }
+
+        .custom-roller::after {
+            bottom: 0;
+            transform: rotate(180deg);
+        }
+
+        .custom-roller:focus-within {
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(0, 210, 255, 0.1), inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        select {
             width: 100%;
             padding: 12px;
-            background: linear-gradient(45deg, #667eea, #764ba2);
+            border: 2px solid #e1e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            background: var(--input-background);
+            color: var(--text-color);
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24' viewBox='0 0 24 24' fill='none' stroke='currentColor' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 20px;
+            padding-right: 40px;
+        }
+
+        select:focus {
+            outline: none;
+            border-color: var(--secondary-color);
+            box-shadow: 0 0 0 3px rgba(0, 210, 255, 0.1), inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        .switch-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .switch-label span {
+            font-size: 14px;
+        }
+
+        .switch {
+            position: relative;
+            display: inline-block;
+            width: 60px;
+            height: 34px;
+        }
+
+        .switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: .4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 26px;
+            width: 26px;
+            left: 4px;
+            bottom: 4px;
+            background-color: white;
+            transition: .4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--primary-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(26px);
+        }
+
+        .slider-text {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 12px;
+            font-weight: bold;
+            color: white;
+            text-shadow: 0 1px 1px rgba(0, 0, 0, 0.3);
+        }
+
+        .slider-text.left {
+            left: 8px;
+        }
+
+        .slider-text.right {
+            right: 8px;
+        }
+
+        button {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            background: var(--button-gradient);
             color: white;
             border: none;
             border-radius: 8px;
+            font-size: 18px;
+            font-weight: 600;
             cursor: pointer;
-            font-size: 16px;
-            font-weight: bold;
+            transition: all 0.3s ease;
             text-transform: uppercase;
             letter-spacing: 1px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px rgba(50,50,93,.11), 0 1px 3px rgba(0,0,0,.08);
+            text-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            position: relative;
+            overflow: hidden;
         }
+
+        button::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(
+                120deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            transition: all 0.6s;
+        }
+
+        button:hover::before {
+            left: 100%;
+        }
+
         button:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 8px rgba(0,0,0,0.15);
+            box-shadow: 0 7px 14px rgba(50,50,93,.1), 0 3px 6px rgba(0,0,0,.08);
         }
-        #results {
+
+        #result {
             margin-top: 30px;
-            padding: 20px;
-            background-color: #f8f9fa;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-            display: none;
+            padding: 25px;
+            background: linear-gradient(135deg, #f6f9ff 0%, #e9f3ff 100%);
+            border-radius: 12px;
+            box-shadow: 
+                inset 0 2px 4px var(--shadow-color),
+                0 4px 6px rgba(0,0,0,0.05);
+            position: relative;
+            overflow: hidden;
+        }
+
+        #result::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url("data:image/svg+xml,%3Csvg width='20' height='20' viewBox='0 0 20 20' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='%23000000' fill-opacity='0.05' fill-rule='evenodd'%3E%3Ccircle cx='3' cy='3' r='3'/%3E%3Ccircle cx='13' cy='13' r='3'/%3E%3C/g%3E%3C/svg%3E");
+            pointer-events: none;
+        }
+
+        .risk-level {
+            font-weight: bold;
+            padding: 5px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .low-risk { 
+            background-color: #4caf50; 
+            color: white;
+        }
+
+        .moderate-risk { 
+            background-color: #ff9800; 
+            color: white;
+        }
+
+        .high-risk { 
+            background-color: #f44336; 
+            color: white;
+        }
+
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #7f8c8d;
+            text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 20px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .form-row {
+                flex-direction: column;
+            }
+
+            .form-row .form-group {
+                margin-right: 0;
+                margin-bottom: 15px;
+            }
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>Predicción de Parto Prematuro</h1>
-        <div class="form-group">
-            <label for="gestationalWeeks">Edad gestacional (semanas):</label>
-            <input type="number" id="gestationalWeeks" required min="22" max="34">
-        </div>
-        <div class="form-group">
-            <label for="gestationalDays">Edad gestacional (días adicionales):</label>
-            <input type="number" id="gestationalDays" required min="0" max="6">
-        </div>
-        <div class="form-group">
-            <label for="uterineDynamics">¿Dinámica uterina?</label>
-            <select id="uterineDynamics" required>
-                <option value="no">No</option>
-                <option value="yes">Sí</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="priorPreterm">¿Antecedente de parto prematuro?</label>
-            <select id="priorPreterm" required>
-                <option value="no">No</option>
-                <option value="yes">Sí</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="cervicalLength">Longitud cervical (mm):</label>
-            <input type="number" id="cervicalLength" required min="0" max="50">
-        </div>
-        <div class="form-group">
-            <label for="membraneRupture">¿Rotura de membranas?</label>
-            <select id="membraneRupture" required>
-                <option value="no">No</option>
-                <option value="yes">Sí</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="fetalNumber">Número de fetos:</label>
-            <select id="fetalNumber" required>
-                <option value="1">1</option>
-                <option value="2">2</option>
-                <option value="3">3</option>
-            </select>
-        </div>
-        <div class="form-group">
-            <label for="cervicalSurgery">¿Cirugía cervical previa?</label>
-            <select id="cervicalSurgery" required>
-                <option value="no">No</option>
-                <option value="yes">Sí</option>
-            </select>
-        </div>
-        <button onclick="calculateRisk()">Calcular Riesgo</button>
-        <div id="results"></div>
+        <h1>Calculadora de Riesgo de Parto Prematuro</h1>
+        <form id="riskForm">
+            <div class="form-row">
+                <div class="form-group">
+                    <label for="gestationalWeeks">Semanas de gestación:</label>
+                    <div class="custom-roller">
+                        <input type="number" id="gestationalWeeks" min="22" max="34" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="gestationalDays">Días de gestación:</label>
+                    <div class="custom-roller">
+                        <input type="number" id="gestationalDays" min="0" max="6" required>
+                    </div>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="cervicalLength">Longitud cervical (mm):</label>
+                <div class="custom-roller">
+                    <input type="number" id="cervicalLength" min="0" max="50" required>
+                </div>
+            </div>
+            <div class="form-group">
+                <label for="fetusCount">Número de fetos:</label>
+                <select id="fetusCount" required>
+                    <option value="1">1</option>
+                    <option value="2">2</option>
+                    <option value="3">3</option>
+                </select>
+            </div>
+            <div class="form-group">
+                <label class="switch-label">
+                    <span>Presencia de contracciones:</span>
+                    <label class="switch">
+                        <input type="checkbox" id="hasContractions">
+                        <span class="slider">
+                            <span class="slider-text left">No</span>
+                            <span class="slider-text right">Sí</span>
+                        </span>
+                    </label>
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="switch-label">
+                    <span>Antecedente de parto prematuro previo:</span>
+                    <label class="switch">
+                        <input type="checkbox" id="hasPreviousPretermBirth">
+                        <span class="slider">
+                            <span class="slider-text left">No</span>
+                            <span class="slider-text right">Sí</span>
+                        </span>
+                    </label>
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="switch-label">
+                    <span>Antecedente de rotura de membranas:</span>
+                    <label class="switch">
+                        <input type="checkbox" id="hasMembraneRupture">
+                        <span class="slider">
+                            <span class="slider-text left">No</span>
+                            <span class="slider-text right">Sí</span>
+                        </span>
+                    </label>
+                </label>
+            </div>
+            <div class="form-group">
+                <label class="switch-label">
+                    <span>Antecedente de cirugía cervical:</span>
+                    <label class="switch">
+                        <input type="checkbox" id="hasCervicalSurgery">
+                        <span class="slider">
+                            <span class="slider-text left">No</span>
+                            <span class="slider-text right">Sí</span>
+                        </span>
+                    </label>
+                </label>
+            </div>
+            <button type="submit">Calcular Riesgo</button>
+        </form>
+        <div id="result"></div>
+        <footer>
+            <p>Derechos reservados a MiMaternoFetal.cl</p>
+        </footer>
     </div>
 
     <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const rollers = document.querySelectorAll('.custom-roller input');
+            rollers.forEach(roller => {
+                roller.addEventListener('input', function() {
+                    if (this.value < this.min) this.value = this.min;
+                    if (this.value > this.max) this.value = this.max;
+                });
+            });
+        });
+
+        document.getElementById('riskForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            calculateRisk();
+        });
+
         function calculateRisk() {
-            const gestationalWeeks = parseFloat(document.getElementById('gestationalWeeks').value);
-            const gestationalDays = parseFloat(document.getElementById('gestationalDays').value);
-            const uterineDynamics = document.getElementById('uterineDynamics').value;
-            const priorPreterm = document.getElementById('priorPreterm').value;
-            const cervicalLength = parseFloat(document.getElementById('cervicalLength').value);
-            const membraneRupture = document.getElementById('membraneRupture').value;
-            const fetalNumber = parseInt(document.getElementById('fetalNumber').value);
-            const cervicalSurgery = document.getElementById('cervicalSurgery').value;
+            const gestationalWeeks = parseInt(document.getElementById('gestationalWeeks').value);
+            const gestationalDays = parseInt(document.getElementById('gestationalDays').value);
+            const cervicalLength = parseInt(document.getElementById('cervicalLength').value);
+            const fetusCount = parseInt(document.getElementById('fetusCount').value);
+            const hasContractions = document.getElementById('hasContractions').checked;
+            const hasPreviousPretermBirth = document.getElementById('hasPreviousPretermBirth').checked;
+            const hasMembraneRupture = document.getElementById('hasMembraneRupture').checked;
+            const hasCervicalSurgery = document.getElementById('hasCervicalSurgery').checked;
 
-            if (isNaN(gestationalWeeks) || isNaN(gestationalDays) || isNaN(cervicalLength)) {
-                alert("Por favor, complete todos los campos numéricos.");
-                return;
-            }
+            let risk = calculateBaseRisk(cervicalLength);
+            
+            if (fetusCount > 1) risk *= 1.5;
+            if (hasContractions) risk *= 1.2;
+            if (hasPreviousPretermBirth) risk *= 1.3;
+            if (hasMembraneRupture) risk *= 1.4;
+            if (hasCervicalSurgery) risk *= 1.1;
 
-            const gestAge = gestationalWeeks + gestationalDays / 7;
-            let riskFactor = 1;
+            risk = Math.min(risk, 0.99);
 
-            if (gestAge < 24) riskFactor *= 1.5;
-            else if (gestAge < 28) riskFactor *= 1.3;
-            else if (gestAge < 32) riskFactor *= 1.2;
-
-            if (cervicalLength < 15) riskFactor *= 2;
-            else if (cervicalLength < 25) riskFactor *= 1.5;
-
-            if (uterineDynamics === 'yes') riskFactor *= 1.3;
-            if (priorPreterm === 'yes') riskFactor *= 1.5;
-            if (membraneRupture === 'yes') riskFactor *= 1.8;
-            if (fetalNumber > 1) riskFactor *= 1.5;
-            if (cervicalSurgery === 'yes') riskFactor *= 1.2;
-
-            const baseRisk = 0.01;
-            const riskOneWeek = Math.min(baseRisk * riskFactor * 2, 1) * 100;
-            const riskTwoWeeks = Math.min(baseRisk * riskFactor * 3, 1) * 100;
-            const riskFourWeeks = Math.min(baseRisk * riskFactor * 4, 1) * 100;
-
-            displayResults(riskOneWeek, riskTwoWeeks, riskFourWeeks, gestAge);
+            displayResults(risk, cervicalLength, gestationalWeeks, gestationalDays);
         }
 
-        function displayResults(riskOneWeek, riskTwoWeeks, riskFourWeeks, gestAge) {
-            const resultsDiv = document.getElementById('results');
-            resultsDiv.style.display = 'block';
-            let html = `<h2>Resultados:</h2>
-                        <p>Riesgo de parto prematuro:</p>
-                        <ul>
-                            <li>A 1 semana: ${riskOneWeek.toFixed(1)}%</li>
-                            <li>A 2 semanas: ${riskTwoWeeks.toFixed(1)}%</li>
-                            <li>A 4 semanas: ${riskFourWeeks.toFixed(1)}%</li>
-                        </ul>
-                        <p>Interpretación:</p>`;
+        function calculateBaseRisk(cervicalLength) {
+            const knownPoints = [
+                { length: 0, risk: 0.80 },
+                { length: 5, risk: 0.80 },
+                { length: 15, risk: 0.298 },
+                { length: 30, risk: 0.007 },
+                { length: 50, risk: 0.007 }
+            ];
 
-            if (riskOneWeek >= 5) {
-                html += "<p>Riesgo elevado de parto prematuro inminente.</p>";
-                if (gestAge < 34) {
-                    html += "<p>Considerar la administración de corticosteroides antenatales.</p>";
+            let lowerPoint, upperPoint;
+            for (let i = 0; i < knownPoints.length - 1; i++) {
+                if (cervicalLength >= knownPoints[i].length && cervicalLength <= knownPoints[i+1].length) {
+                    lowerPoint = knownPoints[i];
+                    upperPoint = knownPoints[i+1];
+                    break;
                 }
-                if (gestAge < 30) {
-                    html += "<p>Evaluar la administración de sulfato de magnesio para neuroprotección fetal.</p>";
-                }
-            } else if (riskTwoWeeks >= 10 || riskFourWeeks >= 15) {
-                html += "<p>Riesgo moderado de parto prematuro. Considerar un seguimiento más frecuente.</p>";
-            } else {
-                html += "<p>Riesgo bajo de parto prematuro inmediato. Continuar con el control prenatal habitual.</p>";
             }
 
-            html += "<p><em>Esta interpretación es una guía. La decisión final debe ser tomada por un profesional de la salud.</em></p>";
+            const slope = (upperPoint.risk - lowerPoint.risk) / (upperPoint.length - lowerPoint.length);
+            return lowerPoint.risk + slope * (cervicalLength - lowerPoint.length);
+        }
 
-            resultsDiv.innerHTML = html;
+        function displayResults(risk, cervicalLength, gestationalWeeks, gestationalDays) {
+            const riskPercentage = (risk * 100).toFixed(2);
+            let interpretation = interpretRisk(risk, cervicalLength, gestationalWeeks, gestationalDays);
+
+            let html = `
+                <h2>Resultados del Riesgo de Parto Prematuro</h2>
+                <p>Riesgo estimado de parto prematuro dentro de 7 días: <span class="${getRiskClass(risk)}">${riskPercentage}%</span></p>
+                <h3>Interpretación y Recomendaciones:</h3>
+                ${interpretation}
+                <p><strong>Nota:</strong> Esta calculadora está basada en evidencia científica, pero es solo una herramienta de orientación. Consulte siempre con su médico para una evaluación personalizada.</p>
+            `;
+
+            document.getElementById('result').innerHTML = html;
+        }
+
+        function getRiskClass(risk) {
+            if (risk < 0.05) return "risk-level low-risk";
+            if (risk < 0.2) return "risk-level moderate-risk";
+            return "risk-level high-risk";
+        }
+
+        function interpretRisk(risk, cervicalLength, gestationalWeeks, gestationalDays) {
+            let interpretation = "<p>";
+            if (risk < 0.05) {
+                interpretation += "<strong class='low-risk'>Riesgo bajo:</strong> El riesgo de parto prematuro en los próximos 7 días es bajo. ";
+                interpretation += "Se recomienda continuar con el seguimiento prenatal de rutina.</p>";
+            } else if (risk < 0.2) {
+                interpretation += "<strong class='moderate-risk'>Riesgo moderado:</strong> Existe un riesgo moderado de parto prematuro. ";
+                interpretation += "Se recomienda un seguimiento más cercano y considerar medidas preventivas.</p>";
+            } else {
+                interpretation += "<strong class='high-risk'>Riesgo alto:</strong> El riesgo de parto prematuro es significativo. ";
+                interpretation += "Se recomienda una evaluación médica inmediata y posibles intervenciones.</p>";
+            }
+
+            interpretation += `<p>Edad gestacional actual: ${gestationalWeeks} semanas y ${gestationalDays} días</p>`;
+            interpretation += `<p>Longitud cervical: ${cervicalLength} mm</p>`;
+
+            interpretation += "<p><strong>Recomendaciones basadas en la longitud cervical:</strong></p><ul>";
+            if (cervicalLength >= 30) {
+                interpretation += "<li>La longitud cervical es normal. Continúe con el seguimiento prenatal regular.</li>";
+            } else if (cervicalLength >= 25) {
+                interpretation += "<li>Considere un seguimiento más frecuente de la longitud cervical.</li>";
+                interpretation += "<li>Discuta con su médico sobre la posibilidad de usar progesterona vaginal.</li>";
+            } else if (cervicalLength >= 20) {
+                interpretation += "<li>Se recomienda el uso de progesterona vaginal.</li>";
+                interpretation += "<li>Aumente la frecuencia de las visitas prenatales.</li>";
+            } else if (cervicalLength >= 15) {
+                interpretation += "<li>Se recomienda una evaluación hospitalaria para observación cercana.</li>";
+                interpretation += "<li>Considere la administración de corticosteroides para maduración pulmonar fetal si está entre las 24 y 34 semanas de gestación.</li>";
+            } else {
+                interpretation += "<li>Se recomienda hospitalización inmediata.</li>";
+                interpretation += "<li>Prepárese para un posible parto prematuro inminente.</li>";
+                interpretation += "<li>Discuta con su médico la administración de corticosteroides y sulfato de magnesio si es apropiado.</li>";
+            }
+            interpretation += "</ul>";
+
+            return interpretation;
         }
     </script>
 </body>
